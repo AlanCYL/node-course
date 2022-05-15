@@ -12,6 +12,6 @@
   "author": "Alan",
   "license": "ISC",
   "dependencies": {
-    "cowsay": "^1.5.0"
+    "axios": "^0.27.2"
   }
 }
