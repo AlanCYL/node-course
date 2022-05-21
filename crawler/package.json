@@ -12,6 +12,7 @@
   "author": "Alan",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "mysql2": "^2.3.3"
   }
 }
