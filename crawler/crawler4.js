@@ -9,7 +9,7 @@ const mysql = require("mysql2/promise");
 (async () => {
   const connection = await mysql.createConnection({
     host: "localhost",
-    // port     : 3306,
+    port: 3306,
     user: "admin",
     password: "12345",
     database: "stock",
