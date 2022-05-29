@@ -54,11 +54,34 @@ app.get("/stocks", async (request, response, next) => {
 });
 
 app.get("/stocks/:stockId", async (request, response, next) => {
-  let [data, fields] = await pool.execute(
-    "SELECT * FROM stocks WHERE id=?" ,[request.params.stockId] 
+  let [dataTotal, fieldsTotal] = await pool.execute(
+    "SELECT * FROM stock_prices WHERE stock_id=?",
+    [request.params.stockId]
   );
+  console.log("query stock by id:", dataTotal);
 
-  console.log("query stock by id:", data);
+  //TODO: 取得目前在第幾頁
+  // RESTful 風格之下,鼓勵把這種過濾參數用query string 來傳遞
+  // /stocks/:stockId?page=1
+  // 取得目前在第幾頁,而且利用 || 這個特性來做預設值
+  // undefined 會是 false, 所以PAGE就被設定成 || 後面那個數字了
+  let page = request.query.page || 1;
+  console.log("current page", page);
+
+  //TODO: 取得目前的總筆數
+  let totalResult = dataTotal.length
+  console.log(totalResult);
+  //TODO: 計算offset 是多少 (計算要跳過幾筆)
+  const perPage = 10
+  let offsetCount = Math.ceil((page-1)*10)
+
+  //TODO: 取得這一頁的資料 SELECT * limit? offset?
+  let [data, fields] = await pool.execute(
+    `SELECT * FROM stock_prices WHERE stock_id=? LIMIT ${perPage} OFFSET ${offsetCount}`,
+    [request.params.stockId]
+  );
+  //TODO: 回覆給前端
+
   //空資料(查不到資料)有兩種處理方式:
   //1. 200 OK 就回 []
   //2. 回覆 404
@@ -66,7 +89,12 @@ app.get("/stocks/:stockId", async (request, response, next) => {
     // 這裡是 404 範例
     response.status(404).json(data);
   } else {
-    response.json(data);
+    response.json({
+      //用來儲存所有跟頁碼有關的資訊
+      pagination: {},
+      //真正的資料
+      data: data,
+    });
   }
 });
 
