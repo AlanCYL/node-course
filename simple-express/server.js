@@ -55,7 +55,7 @@ app.get("/stocks", async (request, response, next) => {
 
 app.get("/stocks/:stockId", async (request, response, next) => {
   let [data, fields] = await pool.execute(
-    "SELECT * FROM stocks WHERE id=" + request.params.stockId
+    "SELECT * FROM stocks WHERE id=?" ,[request.params.stockId] 
   );
 
   console.log("query stock by id:", data);
