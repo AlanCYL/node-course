@@ -73,7 +73,9 @@ app.get("/stocks/:stockId", async (request, response, next) => {
   console.log(totalResult);
   //TODO: 計算offset 是多少 (計算要跳過幾筆)
   const perPage = 10
-  let offsetCount = Math.ceil((page-1)*10)
+  let offsetCount = (page-1)*10
+  let totalPage = Math.ceil(totalResult/perPage) 
+  console.log(totalPage);
 
   //TODO: 取得這一頁的資料 SELECT * limit? offset?
   let [data, fields] = await pool.execute(
